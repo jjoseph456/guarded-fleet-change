@@ -35,3 +35,16 @@
     - name: Access is restricted to the configured group
       ansible.builtin.command: grep -q 'simple_allow_groups = linux-admins' /etc/sssd/sssd.conf
       changed_when: false
+
+    - name: Read the pre-change manifest
+      ansible.builtin.slurp:
+        src: /var/backups/fleetguard/CHG-TEST/pre-change-manifest.json
+      register: sssd_client_manifest
+
+    - name: Manifest reflects the host before the change, not after
+      vars:
+        sssd_client_original: "{{ sssd_client_manifest.content | b64decode | from_json }}"
+      ansible.builtin.assert:
+        that:
+          - "'/etc/nsswitch.conf' in sssd_client_original"
+          - "'/etc/sssd/sssd.conf' not in sssd_client_original"

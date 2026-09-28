@@ -22,11 +22,17 @@
         state: directory
         mode: "0700"
 
-    - name: Check which identity files exist
+    - name: Check for the pre-change manifest
+      ansible.builtin.stat:
+        path: "{{ sssd_client_backup_dir }}/pre-change-manifest.json"
+      register: sssd_client_manifest_stat
+
+    - name: Check which identity files exist before the change
       ansible.builtin.stat:
         path: "{{ item }}"
       loop: "{{ sssd_client_managed_files }}"
       register: sssd_client_existing
+      when: not sssd_client_manifest_stat.stat.exists
 
     - name: Back up existing identity files once per change
       ansible.builtin.copy:
@@ -35,10 +41,20 @@
         remote_src: true
         force: false
         mode: preserve
-      loop: "{{ sssd_client_existing.results }}"
+      loop: "{{ sssd_client_existing.results | default([]) }}"
       loop_control:
         label: "{{ item.item }}"
-      when: item.stat.exists
+      when: item.stat is defined and item.stat.exists
+
+    - name: Record which identity files existed before the change
+      ansible.builtin.copy:
+        content: >-
+          {{ sssd_client_existing.results | selectattr('stat', 'defined')
+             | selectattr('stat.exists') | map(attribute='item') | list | to_json }}
+        dest: "{{ sssd_client_backup_dir }}/pre-change-manifest.json"
+        force: false
+        mode: "0600"
+      when: not sssd_client_manifest_stat.stat.exists
 
     - name: Install SSSD packages
       ansible.builtin.package:
@@ -86,25 +102,33 @@
       when: sssd_client_manage_service | bool
 
   rescue:
+    - name: Read the pre-change manifest
+      ansible.builtin.slurp:
+        src: "{{ sssd_client_backup_dir }}/pre-change-manifest.json"
+      register: sssd_client_manifest
+      failed_when: false
+
+    - name: Determine which identity files existed before the change
+      ansible.builtin.set_fact:
+        sssd_client_original_files: >-
+          {{ (sssd_client_manifest.content | b64decode | from_json)
+             if sssd_client_manifest.content is defined
+             else (sssd_client_existing.results | default([]) | selectattr('stat', 'defined')
+                   | selectattr('stat.exists') | map(attribute='item') | list) }}
+
     - name: Restore backed-up identity files
       ansible.builtin.copy:
-        src: "{{ sssd_client_backup_dir }}/{{ item.item | basename }}"
-        dest: "{{ item.item }}"
+        src: "{{ sssd_client_backup_dir }}/{{ item | basename }}"
+        dest: "{{ item }}"
         remote_src: true
         mode: preserve
-      loop: "{{ sssd_client_existing.results | default([]) }}"
-      loop_control:
-        label: "{{ item.item }}"
-      when: item.stat is defined and item.stat.exists
+      loop: "{{ sssd_client_original_files }}"
 
     - name: Remove identity files that did not exist before the change
       ansible.builtin.file:
-        path: "{{ item.item }}"
+        path: "{{ item }}"
         state: absent
-      loop: "{{ sssd_client_existing.results | default([]) }}"
-      loop_control:
-        label: "{{ item.item }}"
-      when: item.stat is defined and not item.stat.exists
+      loop: "{{ sssd_client_managed_files | difference(sssd_client_original_files) }}"
 
     - name: Stop the rollout after rollback
       ansible.builtin.fail:
