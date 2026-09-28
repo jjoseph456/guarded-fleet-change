@@ -1,0 +1,6 @@
+---
+- name: Add sss to passwd, group, and shadow lookups
+  ansible.builtin.replace:
+    path: /etc/nsswitch.conf
+    regexp: '^(passwd|group|shadow):(\s+)(?!.*\bsss\b)(.*)$'
+    replace: '\1:\2\3 sss'

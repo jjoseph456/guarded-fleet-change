@@ -1,0 +1,37 @@
+---
+- name: Verify
+  hosts: all
+  become: true
+  gather_facts: false
+  tasks:
+    - name: Read sssd.conf metadata
+      ansible.builtin.stat:
+        path: /etc/sssd/sssd.conf
+      register: sssd_client_conf
+
+    - name: Confirm sssd.conf exists with mode 0600
+      ansible.builtin.assert:
+        that:
+          - sssd_client_conf.stat.exists
+          - sssd_client_conf.stat.mode == '0600'
+
+    - name: SSSD accepts the rendered configuration
+      ansible.builtin.command: sssctl config-check
+      changed_when: false
+
+    - name: Read nsswitch passwd line
+      ansible.builtin.command: grep -E '^passwd:' /etc/nsswitch.conf
+      register: sssd_client_passwd_line
+      changed_when: false
+
+    - name: Name service lookups include sss
+      ansible.builtin.assert:
+        that: "'sss' in sssd_client_passwd_line.stdout"
+
+    - name: Original nsswitch.conf was backed up for rollback
+      ansible.builtin.command: cmp /root/nsswitch.orig /var/backups/fleetguard/CHG-TEST/nsswitch.conf
+      changed_when: false
+
+    - name: Access is restricted to the configured group
+      ansible.builtin.command: grep -q 'simple_allow_groups = linux-admins' /etc/sssd/sssd.conf
+      changed_when: false

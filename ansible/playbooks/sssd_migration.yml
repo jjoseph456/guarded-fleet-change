@@ -1,0 +1,32 @@
+---
+- name: Migrate Linux identity to SSSD
+  hosts: all
+  become: true
+  gather_facts: true
+  serial: "{{ fleetguard_serial | default('100%') }}"
+  max_fail_percentage: 0
+
+  pre_tasks:
+    - name: Refuse to run outside a fleetguard wave
+      ansible.builtin.assert:
+        that:
+          - fleetguard_change_id is defined
+          - fleetguard_wave is defined
+        fail_msg: "Run this playbook through `fleetguard run` so policy and approval gates apply."
+        quiet: true
+
+  roles:
+    - role: sssd_client
+
+  post_tasks:
+    - name: Health gate - collect service state
+      ansible.builtin.service_facts:
+      when: sssd_client_manage_service | bool
+
+    - name: Health gate - sssd is running
+      ansible.builtin.assert:
+        that:
+          - ansible_facts.services['sssd.service'].state == 'running'
+        fail_msg: "sssd is not running on {{ inventory_hostname }}; halting the wave."
+        quiet: true
+      when: sssd_client_manage_service | bool

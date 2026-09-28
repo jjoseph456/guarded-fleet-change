@@ -1,0 +1,20 @@
+---
+- name: Prepare
+  hosts: all
+  gather_facts: false
+  tasks:
+    - name: Install Python on Ubuntu images
+      ansible.builtin.raw: |
+        if ! command -v python3 >/dev/null; then
+          apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y python3
+        fi
+      changed_when: false
+
+- name: Seed pre-change identity files
+  hosts: all
+  gather_facts: false
+  tasks:
+    - name: Record the original nsswitch.conf for rollback checks
+      ansible.builtin.command: cp /etc/nsswitch.conf /root/nsswitch.orig
+      args:
+        creates: /root/nsswitch.orig

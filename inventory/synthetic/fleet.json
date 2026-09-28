@@ -1,0 +1,236 @@
+{
+  "generated": "synthetic",
+  "hosts": [
+    {
+      "name": "app-01.site-a.example.test",
+      "site": "site-a",
+      "role": "app",
+      "environment": "production",
+      "os": "rocky9",
+      "ha_pair": null,
+      "monitoring": true,
+      "backup_age_hours": 6,
+      "encrypted_at_rest": true
+    },
+    {
+      "name": "app-02.site-a.example.test",
+      "site": "site-a",
+      "role": "app",
+      "environment": "production",
+      "os": "ubuntu2404",
+      "ha_pair": null,
+      "monitoring": true,
+      "backup_age_hours": 4,
+      "encrypted_at_rest": true
+    },
+    {
+      "name": "app-03.site-a.example.test",
+      "site": "site-a",
+      "role": "app",
+      "environment": "production",
+      "os": "rhel9",
+      "ha_pair": null,
+      "monitoring": true,
+      "backup_age_hours": 96,
+      "encrypted_at_rest": true
+    },
+    {
+      "name": "app-04.site-a.example.test",
+      "site": "site-a",
+      "role": "app",
+      "environment": "production",
+      "os": "rocky9",
+      "ha_pair": null,
+      "monitoring": true,
+      "backup_age_hours": 4,
+      "encrypted_at_rest": true
+    },
+    {
+      "name": "db-01.site-a.example.test",
+      "site": "site-a",
+      "role": "db",
+      "environment": "production",
+      "os": "rhel9",
+      "ha_pair": "db-pair.site-a",
+      "monitoring": true,
+      "backup_age_hours": 4,
+      "encrypted_at_rest": true
+    },
+    {
+      "name": "db-02.site-a.example.test",
+      "site": "site-a",
+      "role": "db",
+      "environment": "production",
+      "os": "rhel9",
+      "ha_pair": "db-pair.site-a",
+      "monitoring": true,
+      "backup_age_hours": 20,
+      "encrypted_at_rest": true
+    },
+    {
+      "name": "bastion-01.site-a.example.test",
+      "site": "site-a",
+      "role": "bastion",
+      "environment": "production",
+      "os": "ubuntu2404",
+      "ha_pair": null,
+      "monitoring": true,
+      "backup_age_hours": 4,
+      "encrypted_at_rest": true
+    },
+    {
+      "name": "app-01.site-b.example.test",
+      "site": "site-b",
+      "role": "app",
+      "environment": "production",
+      "os": "rhel9",
+      "ha_pair": null,
+      "monitoring": true,
+      "backup_age_hours": 4,
+      "encrypted_at_rest": true
+    },
+    {
+      "name": "app-02.site-b.example.test",
+      "site": "site-b",
+      "role": "app",
+      "environment": "production",
+      "os": "ubuntu2404",
+      "ha_pair": null,
+      "monitoring": true,
+      "backup_age_hours": 4,
+      "encrypted_at_rest": true
+    },
+    {
+      "name": "app-03.site-b.example.test",
+      "site": "site-b",
+      "role": "app",
+      "environment": "production",
+      "os": "rhel9",
+      "ha_pair": null,
+      "monitoring": true,
+      "backup_age_hours": 6,
+      "encrypted_at_rest": true
+    },
+    {
+      "name": "app-04.site-b.example.test",
+      "site": "site-b",
+      "role": "app",
+      "environment": "production",
+      "os": "rhel9",
+      "ha_pair": null,
+      "monitoring": false,
+      "backup_age_hours": 20,
+      "encrypted_at_rest": true
+    },
+    {
+      "name": "db-01.site-b.example.test",
+      "site": "site-b",
+      "role": "db",
+      "environment": "production",
+      "os": "rhel9",
+      "ha_pair": "db-pair.site-b",
+      "monitoring": true,
+      "backup_age_hours": 6,
+      "encrypted_at_rest": true
+    },
+    {
+      "name": "db-02.site-b.example.test",
+      "site": "site-b",
+      "role": "db",
+      "environment": "production",
+      "os": "rhel9",
+      "ha_pair": "db-pair.site-b",
+      "monitoring": true,
+      "backup_age_hours": 6,
+      "encrypted_at_rest": true
+    },
+    {
+      "name": "bastion-01.site-b.example.test",
+      "site": "site-b",
+      "role": "bastion",
+      "environment": "production",
+      "os": "centos7",
+      "ha_pair": null,
+      "monitoring": true,
+      "backup_age_hours": 20,
+      "encrypted_at_rest": true
+    },
+    {
+      "name": "app-01.site-c.example.test",
+      "site": "site-c",
+      "role": "app",
+      "environment": "staging",
+      "os": "rhel9",
+      "ha_pair": null,
+      "monitoring": true,
+      "backup_age_hours": 4,
+      "encrypted_at_rest": true
+    },
+    {
+      "name": "app-02.site-c.example.test",
+      "site": "site-c",
+      "role": "app",
+      "environment": "staging",
+      "os": "rocky9",
+      "ha_pair": null,
+      "monitoring": true,
+      "backup_age_hours": 6,
+      "encrypted_at_rest": true
+    },
+    {
+      "name": "app-03.site-c.example.test",
+      "site": "site-c",
+      "role": "app",
+      "environment": "staging",
+      "os": "rhel9",
+      "ha_pair": null,
+      "monitoring": true,
+      "backup_age_hours": 6,
+      "encrypted_at_rest": true
+    },
+    {
+      "name": "app-04.site-c.example.test",
+      "site": "site-c",
+      "role": "app",
+      "environment": "staging",
+      "os": "rocky9",
+      "ha_pair": null,
+      "monitoring": true,
+      "backup_age_hours": 4,
+      "encrypted_at_rest": true
+    },
+    {
+      "name": "db-01.site-c.example.test",
+      "site": "site-c",
+      "role": "db",
+      "environment": "staging",
+      "os": "rhel9",
+      "ha_pair": "db-pair.site-c",
+      "monitoring": true,
+      "backup_age_hours": 4,
+      "encrypted_at_rest": true
+    },
+    {
+      "name": "db-02.site-c.example.test",
+      "site": "site-c",
+      "role": "db",
+      "environment": "staging",
+      "os": "rhel9",
+      "ha_pair": "db-pair.site-c",
+      "monitoring": true,
+      "backup_age_hours": 20,
+      "encrypted_at_rest": true
+    },
+    {
+      "name": "bastion-01.site-c.example.test",
+      "site": "site-c",
+      "role": "bastion",
+      "environment": "staging",
+      "os": "ubuntu2404",
+      "ha_pair": null,
+      "monitoring": true,
+      "backup_age_hours": 12,
+      "encrypted_at_rest": true
+    }
+  ]
+}

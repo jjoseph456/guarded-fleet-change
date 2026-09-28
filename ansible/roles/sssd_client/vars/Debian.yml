@@ -1,0 +1,8 @@
+---
+sssd_client_packages:
+  - sssd
+  - sssd-ad
+  - sssd-tools
+  - krb5-user
+  - libnss-sss
+  - libpam-sss

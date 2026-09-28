@@ -1,0 +1,11 @@
+---
+- name: Read the current authselect profile
+  ansible.builtin.command: authselect current --raw
+  register: sssd_client_authselect
+  changed_when: false
+  failed_when: false
+
+- name: Select the sssd authselect profile
+  ansible.builtin.command: authselect select sssd with-mkhomedir --force
+  when: not (sssd_client_authselect.stdout | default('')).startswith('sssd')
+  changed_when: true

@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "guarded-fleet-change"
+version = "0.1.0"
+description = "Policy-gated, approval-bound, staged Ansible rollouts for Linux fleets."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+dependencies = ["PyYAML>=6"]
+
+[project.optional-dependencies]
+ansible = ["ansible-core>=2.16,<2.19", "ansible-lint>=24"]
+molecule = ["molecule>=24", "molecule-plugins[docker]>=23", "docker>=7"]
+
+[project.scripts]
+fleetguard = "fleetguard.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]

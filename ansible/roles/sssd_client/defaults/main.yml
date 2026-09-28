@@ -1,0 +1,14 @@
+---
+# Directory settings. Override per environment; the defaults are synthetic.
+sssd_client_domain: example.test
+sssd_client_realm: EXAMPLE.TEST
+sssd_client_ad_servers: []
+sssd_client_access_groups: []
+sssd_client_use_fully_qualified_names: false
+sssd_client_legacy_packages: []
+sssd_client_manage_service: true
+sssd_client_backup_root: /var/backups/fleetguard
+sssd_client_managed_files:
+  - /etc/sssd/sssd.conf
+  - /etc/krb5.conf
+  - /etc/nsswitch.conf

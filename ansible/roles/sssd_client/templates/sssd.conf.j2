@@ -1,0 +1,24 @@
+# {{ ansible_managed }}
+[sssd]
+config_file_version = 2
+services = nss, pam
+domains = {{ sssd_client_domain }}
+
+[domain/{{ sssd_client_domain }}]
+id_provider = ad
+ad_domain = {{ sssd_client_domain }}
+krb5_realm = {{ sssd_client_realm }}
+{% if sssd_client_ad_servers %}
+ad_server = {{ sssd_client_ad_servers | join(', ') }}
+{% endif %}
+cache_credentials = True
+ldap_id_mapping = True
+use_fully_qualified_names = {{ sssd_client_use_fully_qualified_names | bool }}
+fallback_homedir = /home/%u
+default_shell = /bin/bash
+{% if sssd_client_access_groups %}
+access_provider = simple
+simple_allow_groups = {{ sssd_client_access_groups | join(', ') }}
+{% else %}
+access_provider = ad
+{% endif %}

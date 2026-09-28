@@ -1,0 +1,17 @@
+# {{ ansible_managed }}
+[libdefaults]
+    default_realm = {{ sssd_client_realm }}
+    dns_lookup_realm = false
+    dns_lookup_kdc = true
+    rdns = false
+    ticket_lifetime = 24h
+    renew_lifetime = 7d
+    forwardable = true
+
+[realms]
+    {{ sssd_client_realm }} = {
+    }
+
+[domain_realm]
+    .{{ sssd_client_domain }} = {{ sssd_client_realm }}
+    {{ sssd_client_domain }} = {{ sssd_client_realm }}

@@ -1,0 +1,18 @@
+# Synthetic change request: move Linux hosts from a legacy directory agent to SSSD.
+id: CHG-0001
+title: Migrate Linux identity from legacy directory agent to SSSD
+playbook: ansible/playbooks/sssd_migration.yml
+selector:
+  roles: [app, db, bastion]
+rollout:
+  canary_count: 1
+  max_wave_percent: 25
+  pause_minutes_between_waves: 30
+health_checks:
+  - name: identity lookup
+    command: id svc-probe@example.test
+  - name: sssd running
+    command: systemctl is-active sssd
+freeze_windows:
+  - start: "2026-12-20T00:00:00Z"
+    end: "2027-01-04T00:00:00Z"
