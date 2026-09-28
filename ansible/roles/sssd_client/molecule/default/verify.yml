@@ -28,9 +28,20 @@
       ansible.builtin.assert:
         that: "'sss' in sssd_client_passwd_line.stdout"
 
+    - name: Read the original and backed-up nsswitch.conf
+      ansible.builtin.stat:
+        path: "{{ item }}"
+        checksum_algorithm: sha256
+      loop:
+        - /root/nsswitch.orig
+        - /var/backups/fleetguard/CHG-TEST/nsswitch.conf
+      register: sssd_client_nsswitch
+
     - name: Original nsswitch.conf was backed up for rollback
-      ansible.builtin.command: cmp /root/nsswitch.orig /var/backups/fleetguard/CHG-TEST/nsswitch.conf
-      changed_when: false
+      ansible.builtin.assert:
+        that:
+          - sssd_client_nsswitch.results[1].stat.exists
+          - sssd_client_nsswitch.results[0].stat.checksum == sssd_client_nsswitch.results[1].stat.checksum
 
     - name: Access is restricted to the configured group
       ansible.builtin.command: grep -q 'simple_allow_groups = linux-admins' /etc/sssd/sssd.conf
