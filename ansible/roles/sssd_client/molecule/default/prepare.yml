@@ -3,10 +3,14 @@
   hosts: all
   gather_facts: false
   tasks:
-    - name: Install Python on Ubuntu images
+    - name: Install Python and sudo on minimal images
       ansible.builtin.raw: |
-        if ! command -v python3 >/dev/null; then
-          apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y python3
+        if command -v apt-get >/dev/null; then
+          command -v python3 >/dev/null && command -v sudo >/dev/null || {
+            apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y python3 sudo
+          }
+        else
+          command -v sudo >/dev/null || dnf install -y sudo
         fi
       changed_when: false
 
